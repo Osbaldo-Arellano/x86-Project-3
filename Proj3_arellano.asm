@@ -23,38 +23,38 @@ UPPER2 = -1
 LOWER2 = -50
 
 .data
-introduction 		BYTE	"Hello and welcome to the Integer Accumulator by Osbaldo Arellano.",13,10,0
-description		BYTE	"The program repeatadly asks for negative input between specifed bounds until a positive number is detetced. Then the program will",13,10,0
-description2		BYTE	"calculate minumum, maxium, rounded and unrounded average values, total (valid) sum, and total number of valid inputs.",13,10,0 
-askName		        BYTE	"What's your name? ",0
-greeting		BYTE	"Hello there, ",0
-instruction		BYTE	"Please enter numbers in [-200, -100] or [-50, -1]. ",0
-instruction2		BYTE	"Enter a non-negative number when you are finished, and input stats will be shown.",13,10,0
-prompt			BYTE	"Enter a number: ",0
-invalid			BYTE	"Invalid input! Number is not within ranges. ", 13,10,0
-counterMssg		BYTE	"You entered ",0
-counterMssg2		BYTE	" valid numbers. ",0
-totalMssg		BYTE	"Your sum of valid numbers: ",0
-maxIs			BYTE	"Max is: ",0
-minIs			BYTE	"Min is: ",0
-avgMssg		        BYTE	"The rounded average is: ",0
-remainderMssg		BYTE	"Remainder: ",0
-emptyInput		BYTE	"You did not enter any numbers.",13,10,0
-decimalMssg		BYTE	"The decimal average is: ",0
-point			BYTE	".",0
-goodbye			BYTE	"Thank you for playing, ",0
-exclamation		BYTE	"!",0
+introduction    BYTE	"Hello and welcome to the Integer Accumulator by Osbaldo Arellano.",13,10,0
+description     BYTE	"The program repeatadly asks for negative input between specifed bounds until a positive number is detetced. Then the program will",13,10,0
+description2    BYTE	"calculate minumum, maxium, rounded and unrounded average values, total (valid) sum, and total number of valid inputs.",13,10,0 
+askName         BYTE	"What's your name? ",0
+greeting        BYTE	"Hello there, ",0
+instruction     BYTE	"Please enter numbers in [-200, -100] or [-50, -1]. ",0
+instruction2    BYTE	"Enter a non-negative number when you are finished, and input stats will be shown.",13,10,0
+prompt	        BYTE	"Enter a number: ",0
+invalid	        BYTE	"Invalid input! Number is not within ranges. ", 13,10,0
+counterMssg     BYTE	"You entered ",0
+counterMssg2	BYTE	" valid numbers. ",0
+totalMssg       BYTE	"Your sum of valid numbers: ",0
+maxIs	        BYTE	"Max is: ",0
+minIs	        BYTE	"Min is: ",0
+avgMssg	        BYTE	"The rounded average is: ",0
+remainderMssg	BYTE	"Remainder: ",0
+emptyInput      BYTE	"You did not enter any numbers.",13,10,0
+decimalMssg     BYTE	"The decimal average is: ",0
+point           BYTE	".",0
+goodbye         BYTE	"Thank you for playing, ",0
+exclamation     BYTE	"!",0
 
-username		BYTE    33 DUP(0)				; User name is stored in an array 
-input			SDWORD	?
-max		        DWORD	0
-min				DWORD	0
-counter			DWORD	0
-total			SDWORD	0
-avg				SDWORD	0
-remainder		SDWORD	0
-tenMultiple		DWORD	100					; Used to multiuply counter to get a whole number to display after a decimal point 
-unroundedAvg	DWORD	0					; Used to display decimal average 
+username        BYTE    33 DUP(0)	   ; User name is stored in an array 
+input           SDWORD	?
+max             DWORD	0
+min             DWORD	0
+counter         DWORD	0
+total           SDWORD	0
+avg             SDWORD	0
+remainder       SDWORD	0
+tenMultiple     DWORD	100	           ; Used to multiuply counter to get a whole number to display after a decimal point 
+unroundedAvg    DWORD	0	           ; Used to display decimal average 
 
 .code
 main PROC
@@ -68,31 +68,31 @@ main PROC
 ;--------------------------
 _introduction:
 	; Introduces the program
-	mov     edx, OFFSET introduction			; Introduce the program 
+	mov     edx, OFFSET introduction	; Introduce the program 
 	call	WriteString
-	mov		edx, OFFSET description
+	mov     edx, OFFSET description
 	call	WriteString
-	mov		edx, OFFSET description2
+	mov     edx, OFFSET description2
 	call	WriteString
-	mov		edx, OFFSET askName
+	mov     edx, OFFSET askName
 	call	WriteString
-	mov     edx, OFFSET username				; Read username
+	mov     edx, OFFSET username	         ; Read username
 	mov     ecx, 32
-    call    ReadString
+	call    ReadString
 
 _greeting:
 	; Greet the user
-	mov		edx, OFFSET greeting
+	mov     edx, OFFSET greeting
 	call	WriteString
-	mov		edx, OFFSET username
+	mov     edx, OFFSET username
 	call	WriteString
 	call	CrLf
 
 _instructions:
 	; Display game rules
-	mov		edx, OFFSET instruction
+	mov     edx, OFFSET instruction
 	call	WriteString
-	mov		edx, OFFSET instruction2
+	mov     edx, OFFSET instruction2
 	call	WriteString
 
 ; --------------------------
@@ -104,32 +104,32 @@ _instructions:
 ;--------------------------
 _input:
 	; Get user input
-	mov		edx, OFFSET prompt
+	mov      edx, OFFSET prompt
 	call	WriteString
 	call	ReadInt
-	cmp		eax, 0				; Initial check if user entered a positive number
-	jge		_displayCounter			; Display total number of valid inputs if user input >= 0
+	cmp     eax, 0                  ; Initial check if user entered a positive number
+	jge     _displayCounter         ; Display total number of valid inputs if user input >= 0
 
 _checkUpper:
-	cmp		eax, UPPER1			; Checking if user input is within the first upper bound
-	jg		_checkLower2		; If not inside first upper bound, check second upper bound
-	jmp		_checkLower			; Else is inside the upper bound, now check lower bound 
+	cmp     eax, UPPER1             ; Checking if user input is within the first upper bound
+	jg      _checkLower2            ; If not inside first upper bound, check second upper bound
+	jmp     _checkLower             ; Else is inside the upper bound, now check lower bound 
 
 _checkLower2:
-	cmp		eax, LOWER2
-	jge		_valid				; Number must be inside [-50, -1] bound 
-	jmp		_invalid			; Number is not inside any bound. Invalid number. 
+	cmp     eax, LOWER2
+	jge     _valid                  ; Number must be inside [-50, -1] bound 
+	jmp     _invalid                ; Number is not inside any bound. Invalid number. 
 
 _checkLower:
-	cmp		eax, LOWER1			; Checking if user input is within upper bound. 
-	jge		_valid				; If upper bound is less than input, then we have a valid number
+	cmp     eax, LOWER1             ; Checking if user input is within upper bound. 
+	jge     _valid                  ; If upper bound is less than input, then we have a valid number
 
 _invalid:
 	; Displays error and prompts the user for more input 
-	mov		edx, OFFSET invalid
-	call	WriteString
-	call	_input
-	jmp		_invalid
+	mov     edx, OFFSET invalid
+	call    WriteString
+	call    _input
+	jmp     _invalid
 
 ; --------------------------
 ; Number is within bound  [-200,-100] or [-50,-1].
@@ -141,13 +141,13 @@ _invalid:
 ;--------------------------
 _valid:
 	; Number is within bounds
-	add		counter, 1			
-	add		total, eax			; Add to running total 
-	cmp		max, 0				 
-	je		_intialize			; If zero, then we know this is the first valid input. Initialize.
-	cmp		min, 0				
-	je		_intialize			; If zero, then we know this is the first valid input. Initialize.
-	jmp		_checkMax			; Else, do max checking
+	add     counter, 1			
+	add     total, eax               ; Add to running total 
+	cmp     max, 0				 
+	je      _intialize               ; If zero, then we know this is the first valid input. Initialize.
+	cmp     min, 0				
+	je      _intialize               ; If zero, then we know this is the first valid input. Initialize.
+	jmp     _checkMax                ; Else, do max checking
 
 ; --------------------------
 ; Min and max global variables are intially set to 0. 
@@ -157,59 +157,59 @@ _valid:
 ;--------------------------
 _intialize:
 	; Min/max is always initialized to first valid input
-	mov		max, eax			
-	mov		min, eax
+	mov     max, eax			
+	mov     min, eax
 
 _checkMax:
-	cmp		max, eax
-	jle		_setMax
-	jmp		_checkMin			; If not a max, then check if min
+	cmp     max, eax
+	jle     _setMax
+	jmp     _checkMin               ; If not a max, then check if min
 
 _checkMin:
-	cmp		min, eax
-	jge		_setMin
-	jmp		_input				; Not any min or max. Done checking for min/max, jump to get more user input
+	cmp     min, eax
+	jge     _setMin
+	jmp     _input                 ; Not any min or max. Done checking for min/max, jump to get more user input
 
 _setMax:
-	mov		max, eax
-	jmp		_input
+	mov     max, eax
+	jmp     _input
 
 _setMin:
-	mov		min, eax
-	jmp		_input
+	mov     min, eax
+	jmp    _input
 
 ; --------------------------
 ; Displays result of calculations when an input >= 0 is detetced.
 ;	- Counter, minimum, maximum and total sum are displayed. 
 ;--------------------------
 _displayCounter:
-	cmp		counter, 0
-	je		_displayNoInput
-	mov		edx, OFFSET counterMssg
+	cmp     counter, 0
+	je      _displayNoInput
+	mov     edx, OFFSET counterMssg
 	call	WriteString
-	mov		eax, counter
+	mov     eax, counter
 	call	WriteDec
-	mov		edx, OFFSET counterMssg2
+	mov     edx, OFFSET counterMssg2
 	call	WriteString
 	call	CrLf
 
 
 _displayMinMax:
-	mov		edx, OFFSET maxIs
+	mov     edx, OFFSET maxIs
 	call	WriteString
-	mov		eax, max
+	mov     eax, max
 	call	WriteInt
 	call	CrLf
-	mov		edx, OFFSET minIs
+	mov     edx, OFFSET minIs
 	call	WriteString
-	mov		eax, min
+	mov     eax, min
 	call	WriteInt
 	call	CrLf
 
 _displaySum:
-	mov		edx, OFFSET totalMssg
+	mov     edx, OFFSET totalMssg
 	call	WriteString
-	mov		eax, total
+	mov     eax, total
 	call	WriteInt
 	call	CrLf
 
@@ -223,31 +223,31 @@ _displaySum:
 ; The decimal point average is displyed for extra credit. 
 ;--------------------------
 _calculateAvg:
-	mov		eax, total
-	mov		ebx, counter
+	mov     eax, total
+	mov     ebx, counter
 	cdq
-	idiv	ebx							 
-	mov		avg, eax					; stores quotient in eax
-	mov		unroundedAvg, eax			; Save avg before rounding for later (extra credit)
-	mov		remainder, edx				; remainder stored in edx	
-	neg		remainder					; Dont care about signed calculations anymore
+	idiv    ebx							 
+	mov     avg, eax                    ; stores quotient in eax
+	mov     unroundedAvg, eax           ; Save avg before rounding for later (extra credit)
+	mov     remainder, edx              ; remainder stored in edx	
+	neg     remainder                   ; Dont care about signed calculations anymore
 
-	mov		eax, remainder			
-	mul		tenMultiple					; Multiplying by 100 will give us a whole number in eax. Can use to show decimal spot up to .01
+	mov     eax, remainder			
+	mul     tenMultiple                 ; Multiplying by 100 will give us a whole number in eax. Can use to show decimal spot up to .01
 	cdq
-	div		counter						; ((Remainder*100) / counter) gives us a whole number in eax that we can use to check if we need rounding  
-	mov		remainder, eax
-	cmp		remainder, 50				; If >= 50 then we need to round 
-	jge		_round
-	jmp		_displayAvg
+	div     counter                     ; ((Remainder*100) / counter) gives us a whole number in eax that we can use to check if we need rounding  
+	mov     remainder, eax
+	cmp     remainder, 50               ; If >= 50 then we need to round 
+	jge     _round
+	jmp     _displayAvg
 
 _round:
-	dec		avg	
+	dec     avg	
 	
 _displayAvg:
-	mov		edx, OFFSET avgMssg
+	mov     edx, OFFSET avgMssg
 	call	WriteString
-	mov		eax, avg
+	mov     eax, avg
 	call	WriteInt
 	call	CrLf
 	
@@ -255,16 +255,16 @@ _displayAvg:
 ; Extra credit
 ; --------------------------
 _displayDecimal:
-	mov		edx, OFFSET decimalMssg
+	mov     edx, OFFSET decimalMssg
 	call	WriteString
-	mov		eax, unroundedAvg	
+	mov     eax, unroundedAvg	
 	call	WriteInt
-	mov		edx, OFFSET point			; char '.'
+	mov     edx, OFFSET point            ; char '.'
 	call	WriteString
-	mov		eax, remainder
+	mov     eax, remainder
 	call	WriteDec
 	call	CrLf
-	jmp		_goodbye
+	jmp     _goodbye
 
 ; --------------------------
 ; The first input that was deteced was a number >= 0. 
@@ -273,17 +273,17 @@ _displayDecimal:
 ; --------------------------
 _displayNoInput:
 	; Got no input from user. First number was positive. 
-	mov		edx, OFFSET emptyInput
+	mov     edx, OFFSET emptyInput
 	call	WriteString
 	Invoke	ExitProcess,0	
 
 _goodbye:
 	; Display goodbye message with the users name
-	mov		edx, OFFSET goodbye
+	mov     edx, OFFSET goodbye
 	call	WriteString
-	mov		edx, OFFSET username
+	mov     edx, OFFSET username
 	call	WriteString
-	mov		edx, OFFSET exclamation
+	mov     edx, OFFSET exclamation
 	call	WriteString
 	call	CrLf
 	Invoke	ExitProcess,0	
